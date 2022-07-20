@@ -16,9 +16,11 @@ void	init_mutex(t_param_philo *data)
 
 	i = 0;
 	data->mutex_fork = ft_calloc(data->nb_philo, sizeof(pthread_mutex_t));
+	data->mutex_state = ft_calloc(data->nb_philo, sizeof(pthread_mutex_t));
 	while (i < data->nb_philo)
 	{
 		pthread_mutex_init(&data->mutex_fork[i], NULL);
+		pthread_mutex_init(&data->mutex_state[i], NULL);
 		i++;
 	}
 	return ;

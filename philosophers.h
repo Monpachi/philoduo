@@ -6,7 +6,7 @@
 /*   By: lseiller <lseiller@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/20 16:47:42 by lseiller         ###   ########.fr       */
+/*   Updated: 2022/07/20 17:23:23 by lseiller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_param_philo
 	int				rounds;
 	pthread_t		alive;
 	pthread_mutex_t	*mutex_fork;
+	pthread_mutex_t	*mutex_state;
 	unsigned long	start_t;
 	unsigned long	end_t;
 	bool			*fork_state;
