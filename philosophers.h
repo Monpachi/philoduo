@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lseiller <lseiller@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/19 17:12:25 by vchan            ###   ########.fr       */
+/*   Updated: 2022/07/20 14:43:12 by lseiller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define _END "\e[0m"
 # define _RED "\e[31m"
 # define _GREY "\e[30m"
+# define _YELLOW "\e[33m"
 # define SYSCALLFAIL -1
 
 # include <stdio.h>

@@ -17,6 +17,7 @@ void	*routine_solo(t_philo *tab_philo)
 	t_philo			*blaise_pascal;
 	unsigned long	time;
 
+
 	blaise_pascal = tab_philo;
 	blaise_pascal->start_time = get_time(tab_philo);
 	usleep(tab_philo->param_philo->time_to_die);
@@ -35,26 +36,66 @@ void	*routine_solo(t_philo *tab_philo)
 // 	pthread_mutex_unlock(print_mutex);
 // }
 
-void	philo_is_hungry(t_philo *tab_philo)
+int	can_lock(t_philo *tab_philo)
+{
+	if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
+	{
+		if (tab_philo->fork == 0 && tab_philo[0].fork == 0)
+			return (1);
+		else
+			return (0);
+	}
+	else
+	{
+		if (tab_philo->fork == 0 && tab_philo[tab_philo->philo_id].fork == 0)
+			return (1);
+		else
+			return (0);
+	}
+}
+
+int	philo_is_hungry(t_philo *tab_philo)
 {
 	int	time;
 
-	time = diff_time(tab_philo) - tab_philo->start_time;
-	printf("%d | %d has taken a fork 🍴\n\033[0m\n", time,
-		tab_philo->philo_id);
+	if (can_lock(tab_philo))
+	{
+		tab_philo->fork = 1;
+		tab_philo[tab_philo->philo_id].fork = 1;
+		pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id - 1]);
+		if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
+			pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[0]);
+		else
+			pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id]);
+		time = diff_time(tab_philo) - tab_philo->start_time;
+		printf("%dms	| %d = %s has taken a fork 🍴%s\n", time,
+			tab_philo->philo_id, _YELLOW, _END);
+		time = diff_time(tab_philo) - tab_philo->start_time;
+		printf("%dms	| %d is eating\n", time, tab_philo->philo_id);
+		usleep(tab_philo->param_philo->time_to_eat * 1000);
+		pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id - 1]);
+		if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
+			pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[0]);
+		else
+			pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id]);
+tab_philo->fork = 0;
+		tab_philo[tab_philo->philo_id].fork = 0;
+	}
+	else
+		return (1);
+	return (0);
 }
 
 void	*routine(void *tab_philo)
 {
 	t_philo	*philosophers;
 
-	// usleep(1000000);
 	philosophers = tab_philo;
 	philosophers->start_time = get_time(philosophers);
-	printf("id %d | %ld = \033[0;33mphilosophers->start_time033\n", philosophers->philo_id,
-		philosophers->start_time);
 	//eat
-	// philo_is_hungry(tab_philo);
+	usleep(10000);
+	if (philo_is_hungry(philosophers))
+		printf("%lums	| %d can't eat\n", diff_time(philosophers) - philosophers->start_time, philosophers->philo_id);
 	//sleep
 	//think;
 	return (NULL);
@@ -69,7 +110,6 @@ void	philo_can_live(t_param_philo *data, t_philo *tab_philo)
 	while (i < data->nb_of_philo)
 	{
 		pthread_create(&(tab_philo[i].threads_id), NULL, &routine, tab_philo + i);
-		usleep(1000000);
 		i++;
 	}
 	while (i < data->nb_of_philo)
@@ -86,30 +126,14 @@ int main(int argc, char **argv)
 
 	init_data(&data);
 	init_mutex(&data);
-
-	/*Ici, j'ai du faire le malloc dans le main pour que ca fonctionne
-		Si je faisais dans la fonction, les donnees ne s'echangeait pas,
-		et ca faisais un segfault.
-		En faisant ca ici, j'ai pas eu le soucis, et du coup, ca devait surement
-		etre sur la stack
-	*/
 	tab_philo = malloc(sizeof(t_philo) * (data.nb_of_philo + 1));
 	if (!tab_philo)
 		return (0);
 	init_tab_philo(tab_philo, &data);
-
-	/*j'ai passe le nombre de param.philo.nb_philo a 2 pour verifier, que
-		j'avais bien un tableau de 2, avec le philo id accessible de partout, et
-		bien a 2 aussi du coup
-		J'ai aussi verifier que toute les donnees etaient bien init*/
-	// printf("nombre id = %d\n", tab_philo[0].philo_id);
-	// printf("nombre id = %d\n", tab_philo[1].philo_id);
-
-	/*Si tu veux tester le programme avec 1 philo, change le nb_philo dans les
-	 param, ca fonctionne niquel */
 	if (data.nb_of_philo == 1)
 		routine_solo(tab_philo);
 	else
 		philo_can_live(&data, tab_philo);
+	sleep(1);
 	return (0);
 }

@@ -3,8 +3,8 @@
 void	init_data(t_param_philo *data)
 {
 	data->nb_of_philo = 5;
-	data->time_to_die = 1000000;
-	data->time_to_eat = 50;
+	data->time_to_die = 10000;
+	data->time_to_eat = 500;
 	data->time_to_sleep = 80;
 	data->nb_round = 50;
 }
