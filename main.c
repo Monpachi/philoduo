@@ -12,16 +12,16 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-void	*routine_solo(t_philo *tab_philo)
+void	*routine_solo(t_philo *philos)
 {
 	t_philo			*blaise_pascal;
 	unsigned long	time;
 
 
-	blaise_pascal = tab_philo;
-	blaise_pascal->start_time = get_time(tab_philo);
-	usleep(tab_philo->param_philo->time_to_die);
-	time = diff_time(tab_philo) - tab_philo->start_time;
+	blaise_pascal = philos;
+	blaise_pascal->start_t = get_time(philos);
+	usleep(philos->data->tt_die);
+	time = diff_time(philos) - philos->start_t;
 	printf("%ld ms	| \033[0;31mphilo 1 died 💀 \n\033[0m", time);
 	return (NULL);
 }
@@ -36,85 +36,93 @@ void	*routine_solo(t_philo *tab_philo)
 // 	pthread_mutex_unlock(print_mutex);
 // }
 
-int	can_lock(t_philo *tab_philo)
+int	can_lock(t_philo *philos)
 {
-	if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
+	int	i;
+
+	i = philos->id - 1;
+	if (philos->id == philos->data->nb_philo)
 	{
-		if (tab_philo->fork == 0 && tab_philo[0].fork == 0)
+		if (philos->data->fork_state[i] == 0 && philos->data->fork_state[0] == 0)
 			return (1);
 		else
 			return (0);
 	}
 	else
 	{
-		if (tab_philo->fork == 0 && tab_philo[tab_philo->philo_id].fork == 0)
+		if (philos->data->fork_state[i] == 0 && philos->data->fork_state[i - 1] == 0)
 			return (1);
 		else
 			return (0);
 	}
 }
 
-int	philo_is_hungry(t_philo *tab_philo)
+int	philo_is_hungry(t_philo *philos)
 {
 	int	time;
 
-	if (can_lock(tab_philo))
+	if (can_lock(philos))
 	{
-		tab_philo->fork = 1;
-		tab_philo[tab_philo->philo_id].fork = 1;
-		pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id - 1]);
-		if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
-			pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[0]);
+		pthread_mutex_lock(&philos->data->mutex_fork[philos->id - 1]);
+		if (philos->id == philos->data->nb_philo)
+			pthread_mutex_lock(&philos->data->mutex_fork[0]);
 		else
-			pthread_mutex_lock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id]);
-		time = diff_time(tab_philo) - tab_philo->start_time;
+			pthread_mutex_lock(&philos->data->mutex_fork[philos->id]);
+		time = diff_time(philos) - philos->start_t;
 		printf("%dms	| %d = %s has taken a fork 🍴%s\n", time,
-			tab_philo->philo_id, _YELLOW, _END);
-		time = diff_time(tab_philo) - tab_philo->start_time;
-		printf("%dms	| %d is eating\n", time, tab_philo->philo_id);
-		usleep(tab_philo->param_philo->time_to_eat * 1000);
-		pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id - 1]);
-		if (tab_philo->philo_id == tab_philo->param_philo->nb_of_philo)
-			pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[0]);
+			philos->id, _YELLOW, _END);
+		time = diff_time(philos) - philos->start_t;
+		printf("%dms	| %d is eating\n", time, philos->id);
+		usleep(philos->data->tt_eat * 1000);
+		pthread_mutex_unlock(&philos->data->mutex_fork[philos->id - 1]);
+		if (philos->id == philos->data->nb_philo)
+			pthread_mutex_unlock(&philos->data->mutex_fork[0]);
 		else
-			pthread_mutex_unlock(&tab_philo->param_philo->mutex_fork[tab_philo->philo_id]);
-tab_philo->fork = 0;
-		tab_philo[tab_philo->philo_id].fork = 0;
+			pthread_mutex_unlock(&philos->data->mutex_fork[philos->id]);
 	}
 	else
 		return (1);
 	return (0);
 }
 
-void	*routine(void *tab_philo)
-{
-	t_philo	*philosophers;
+// int	philo_is_hungry(t_philo *philos)
+// {
+	// int	time;
+//
+	// if (!can_lock(philos))
+		// return (1);
+	// return (0);
+// }
 
-	philosophers = tab_philo;
-	philosophers->start_time = get_time(philosophers);
+void	*routine(void *philos_to_cast)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *) philos_to_cast;
+	philo->start_t = get_time(philo);
 	//eat
 	usleep(10000);
-	if (philo_is_hungry(philosophers))
-		printf("%lums	| %d can't eat\n", diff_time(philosophers) - philosophers->start_time, philosophers->philo_id);
+	if (philo_is_hungry(philo))
+		printf("%lums	| %d can't eat\n", diff_time(philo) - philo->start_t, philo->id);
 	//sleep
 	//think;
 	return (NULL);
 }
 
 
-void	philo_can_live(t_param_philo *data, t_philo *tab_philo)
+void	philo_can_live(t_param_philo *data, t_philo *philos)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->nb_of_philo)
+	while (i < data->nb_philo)
 	{
-		pthread_create(&(tab_philo[i].threads_id), NULL, &routine, tab_philo + i);
+		pthread_create(&(philos[i].thread_id), NULL, &routine, philos + i);
 		i++;
 	}
-	while (i < data->nb_of_philo)
+	while (i < data->nb_philo)
 	{
-		pthread_join(tab_philo[i].threads_id, NULL);
+		pthread_join(philos[i].thread_id, NULL);
 		i++;
 	}
 }
@@ -122,18 +130,18 @@ void	philo_can_live(t_param_philo *data, t_philo *tab_philo)
 int main(int argc, char **argv)
 {
 	t_param_philo	data;
-	t_philo			*tab_philo;
+	t_philo			*philos;
 
 	init_data(&data);
 	init_mutex(&data);
-	tab_philo = malloc(sizeof(t_philo) * (data.nb_of_philo + 1));
-	if (!tab_philo)
+	philos = malloc(sizeof(t_philo) * (data.nb_philo + 1));
+	if (!philos)
 		return (0);
-	init_tab_philo(tab_philo, &data);
-	if (data.nb_of_philo == 1)
-		routine_solo(tab_philo);
+	init_tab_philo(philos, &data);
+	if (data.nb_philo == 1)
+		routine_solo(philos);
 	else
-		philo_can_live(&data, tab_philo);
+		philo_can_live(&data, philos);
 	sleep(1);
 	return (0);
 }

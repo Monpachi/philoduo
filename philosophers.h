@@ -6,7 +6,7 @@
 /*   By: lseiller <lseiller@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/20 14:43:12 by lseiller         ###   ########.fr       */
+/*   Updated: 2022/07/20 16:47:42 by lseiller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,29 @@
 
 typedef struct s_param_philo
 {
-	int				nb_of_philo;
-	unsigned long	time_to_die;
-	unsigned long	time_to_eat;
-	unsigned long	time_to_sleep;
-	int				nb_round;
-	pthread_t		is_alive;
-	// t_fork			*mutex_fork;
+	int				nb_philo;
+	unsigned long	tt_die;
+	unsigned long	tt_eat;
+	unsigned long	tt_sleep;
+	int				rounds;
+	pthread_t		alive;
 	pthread_mutex_t	*mutex_fork;
-	unsigned long	start_time;
-	unsigned long	end_time;
-	bool			is_it_over;
+	unsigned long	start_t;
+	unsigned long	end_t;
+	bool			*fork_state;
+	// bool			is_over;
 	// unsigned long	time_to_think;
 	// pthread_mutex_t	*mutex_print;
 }	t_param_philo;
 
-// typedef struct s_fork
-// {
-// 	pthread_mutex_t	fork;
-// 	int				is_taken;
-// }	t_fork;
-
 typedef struct s_philo
 {
-	int				philo_id;
-	int				fork;
+	int				id;
 	int				state;
-	unsigned long	start_time;
-	unsigned long	end_time;
-	pthread_t		threads_id;
-	t_param_philo	*param_philo;
+	unsigned long	start_t;
+	unsigned long	end_t;
+	pthread_t		thread_id;
+	t_param_philo	*data;
 }	t_philo;
 
 void	*ft_calloc(size_t nmemb, size_t size);
