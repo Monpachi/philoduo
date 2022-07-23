@@ -1,6 +1,6 @@
 #include "philosophers.h"
 
-unsigned long	get_time(t_philo *data)
+unsigned long	get_time(t_param_philo *data)
 {
 	struct	timeval time;
 
@@ -10,7 +10,7 @@ unsigned long	get_time(t_philo *data)
 	return (data->start_t);
 }
 
-unsigned long	diff_time(t_philo *data)
+unsigned long	diff_time(t_param_philo *data)
 {
 	struct	timeval end_time;
 

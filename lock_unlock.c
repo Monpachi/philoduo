@@ -36,7 +36,7 @@ void	change_state(t_philo *philos, int i)
 		philos->data->fork_state[i + 1] = 0;
 }
 
-void	lock_fork(t_philo *philos, int i)
+void	lock_forks(t_philo *philos, int i)
 {
 	pthread_mutex_lock(&philos->data->mutex_fork[i]);
 	if (i == philos->data->nb_philo)
@@ -45,7 +45,7 @@ void	lock_fork(t_philo *philos, int i)
 		pthread_mutex_lock(&philos->data->mutex_fork[i + 1]);
 }
 
-void	unlock_fork(t_philo *philos, int i)
+void	unlock_forks(t_philo *philos, int i)
 {
 	if (i == philos->data->nb_philo)
 		pthread_mutex_unlock(&philos->data->mutex_fork[0]);
