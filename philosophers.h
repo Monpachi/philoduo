@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lseiller <lseiller@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/20 17:23:23 by lseiller         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:41:06 by vchan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define _RED "\e[31m"
 # define _GREY "\e[30m"
 # define _YELLOW "\e[33m"
+# define _GREEN "\e[32m"
 # define SYSCALLFAIL -1
 
 # include <stdio.h>
@@ -25,6 +26,9 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdbool.h>
+
+# define EAT_MSG _GREEN "is eating 🍝"_END
+# define FORK_MSG _YELLOW "has taken a fork 🍴" _END
 
 typedef struct s_param_philo
 {
@@ -41,7 +45,7 @@ typedef struct s_param_philo
 	bool			*fork_state;
 	// bool			is_over;
 	// unsigned long	time_to_think;
-	// pthread_mutex_t	*mutex_print;
+	pthread_mutex_t	*mutex_print;
 }	t_param_philo;
 
 typedef struct s_philo
@@ -69,5 +73,10 @@ unsigned long	diff_time(t_philo *data);
 void	init_tab_philo(t_philo *tab_philo, t_param_philo *data);
 void	init_mutex(t_param_philo *data);
 void	init_data(t_param_philo *data);
+void	lock_state(t_philo *philos, int i);
+void	unlock_state(t_philo *philos, int i);
+void	change_state(t_philo *philos, int i);
+void	lock_fork(t_philo *philos, int i);
+void	unlock_fork(t_philo *philos, int i);
 
 #endif
