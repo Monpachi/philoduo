@@ -2,14 +2,17 @@
 
 int	init_data(t_param_philo *data)
 {
-	data->nb_philo = 5;
-	data->tt_die = 420;
+	data->nb_philo = 6;
+	data->tt_die = 800;
 	data->tt_eat = 200;
 	data->tt_sleep = 200;
 	data->rounds = 0;
 	data->fork_state = ft_calloc(data->nb_philo, sizeof(bool));
 	if (!data->fork_state)
 		return (1);
+	if (pthread_mutex_init(&data->mutex_print, NULL))
+		return (free(data->fork_state), 1);
+
 	return (0);
 }
 
@@ -63,6 +66,7 @@ void	init_tab_philo(t_philo *philos, t_param_philo *data)
 		philos[i] = (t_philo){0};
 		philos[i].data = data;
 		philos[i].id = i + 1;
+		// philos =  da% philo->data->nb_philo
 		i++;
 	}
 	return ;

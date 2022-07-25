@@ -15,42 +15,6 @@
 // 	return (1);
 // }
 
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*ptr;
-
-	if (nmemb <= 0 || size <= 0 || nmemb > 4294967295 || size > 4294967295)
-		return (NULL);
-	ptr = malloc(nmemb * size);
-	if (ptr)
-		memset(ptr, 0, nmemb * size);
-	return (ptr);
-}
-
-// void	*routine_solo(t_philo *philos)
-// {
-// 	t_philo			*blaise_pascal;
-// 	unsigned long	time;
-
-
-// 	blaise_pascal = philos;
-// 	blaise_pascal->start_t = get_time(philos);
-// 	usleep(philos->data->tt_die);
-// 	time = diff_time(philos) - philos->start_t;
-// 	printf("%ld ms	| \033[0;31mphilo 1 died 💀 \n\033[0m", time);
-// 	return (NULL);
-// }
-
-// void	print_action(t_philo *philos, char *s)
-// {
-// 	int	time;
-
-// 	time = diff_time(philos) - philos->start_t;
-// 	pthread_mutex_lock(philos->data->mutex_print);
-// 	printf("%d	| %d %s\n", time, philos->id, s);
-// 	pthread_mutex_unlock(philos->data->mutex_print);
-// }
-
 // void	ft_sleep(int time, t_param_philo *data)
 // {
 // 	struct timeval	debut;
@@ -59,73 +23,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 // 	while (get_time(&debut) < time && !ft_checkdead(data))
 // 	{
 // 		usleep(200);
-// 	}
-// }
-
-int	philo_is_hungry(t_philo *philos)
-{
-	int	time;
-	int	i;
-
-	i = philos->id - 1;
-	lock_state(philos, i);
-	unlock_state(philos, i);
-	time = diff_time(philos->data) - philos->data->start_t;
-	lock_forks(philos, i);
-	// print_action(philos, FORK_MSG);
-	// print_action(philos, FORK_MSG);
-	// print_action(philos, EAT_MSG);
-	printf("%dms	| %d = %s\n", time, philos->id, FORK_MSG);
-	printf("%dms	| %d = %s\n", time, philos->id, FORK_MSG);
-	printf("%dms	| %d = %s\n", time, philos->id, EAT_MSG);
-	philos->last_meal = diff_time(philos->data);
-	change_state(philos, i);
-	usleep(philos->data->tt_eat * 1000);
-	unlock_forks(philos, i);
-	return (0);
-}
-
-
-
-
-bool	asleep_think(t_philo *philos)
-{
-	int	time;
-
-	time = diff_time(philos->data) - philos->data->start_t;
-	printf("%dms	| %d = %s\n", time, philos->id, SLEEP_MSG);
-	usleep(philos->data->tt_sleep);
-	time = diff_time(philos->data) - philos->data->start_t;
-	printf("%dms	| %d = %s\n", time, philos->id, THINKING_MSG);
-	return (0);
-}
-
-// void	ft_manager(t_philo *philo)
-// {
-// 	t_param_philo	*data;
-// 	int				status;
-// 	int				i;
-
-// 	status = 1;
-// 	data = philo->data;
-// 	while (status)
-// 	{
-// 		i = -1;
-// 		while (status && ++i < data->nb_philo)
-// 		{
-// 			status = ft_deathcheck(philo, data, get_time(data->start_t));
-// 			if (!status)
-// 				return ;
-// 			// pthread_mutex_lock(&data->eat_m);
-// 			// if (data-> == data->nb_philo)
-// 			// {
-// 			// 	ft_stop(data);
-// 			// 	status = 0;
-// 			// }
-// 			// pthread_mutex_unlock(&data->eat_m);
-// 		}
-// 		if (status)
-// 			usleep(250);
 // 	}
 // }
 
@@ -151,6 +48,86 @@ bool	asleep_think(t_philo *philos)
 // 	return (NULL);
 // }
 
+// int	ft_deathcheck(t_philo *philos, t_param_philo *data, unsigned long time)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (philos->data->nb_philo > i)
+// 	{
+// 		if (diff_time())
+// 		i++;
+
+// 	}
+
+// 	// pthread_mutex_lock(philos->last_meal_m);
+// 	if (time_diff(philos->last_meal, time) >= data->tt_die)
+// 	{
+// 		printf("%dms	| %d = %s\n", time, philos->id, DEAD_MSG);
+// 		ft_stop(data);
+// 		pthread_mutex_unlock(philos->last_meal_m);
+// 		return (0);
+// 	}
+// 	pthread_mutex_unlock(philos->last_meal_m);
+// 	return (1);
+// }
+
+int	philo_is_hungry(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(&philo->data->mutex_fork[(philo->id + 1) % philo->data->nb_philo]);
+		// printf("%d locked %d\n",philo->id, (philo->id + 1) % philo->data->nb_philo);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->data->mutex_fork[((philo->id) - 1 ) % philo->data->nb_philo]);
+		// printf("%d locked %d\n",philo->id, (philo->id));
+	}
+	printf("%lums	| %d = %s\n", diff_time2(philo->data), philo->id, FORK_MSG);
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(&philo->data->mutex_fork[((philo->id) - 1 )% philo->data->nb_philo]);
+		// printf("%d locked %d\n",philo->id, (philo->id));
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->data->mutex_fork[(philo->id + 1) % philo->data->nb_philo]);
+		// printf("%d locked %d\n",philo->id, (philo->id + 1) % philo->data->nb_philo);
+	}
+	printf("%lums	| %d = %s\n", diff_time2(philo->data), philo->id, FORK_MSG);
+	printf("%lums	| %d = %s\n", diff_time2(philo->data), philo->id, EAT_MSG);
+	philo->last_meal = diff_time(philo->data);
+	usleep(1000 * philo->data->tt_eat);
+
+	pthread_mutex_unlock(&philo->data->mutex_fork[(philo->id) - 1]);
+	// printf("%d unlocked %d\n",philo->id, (philo->id));
+	pthread_mutex_unlock(&philo->data->mutex_fork[(philo->id + 1) % philo->data->nb_philo]);
+	// printf("%d unlocked %d\n",philo->id, (philo->id + 1) % philo->data->nb_philo);
+	return (0);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb <= 0 || size <= 0 || nmemb > 4294967295 || size > 4294967295)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (ptr)
+		memset(ptr, 0, nmemb * size);
+	return (ptr);
+}
+
+bool	asleep_think(t_philo *philos)
+{
+	int	time;
+
+	printf("%lums	| %d = %s\n", diff_time2(philos->data), philos->id, SLEEP_MSG);
+	usleep(philos->data->tt_sleep);
+	printf("%lums	| %d = %s\n", diff_time2(philos->data), philos->id, THINKING_MSG);
+	return (0);
+}
 
 void	*routine(void *philos_to_cast)
 {
@@ -162,7 +139,7 @@ void	*routine(void *philos_to_cast)
 	while (1)//not dead
 	{
 		philo_is_hungry(philo);
-		asleep_think(philo);
+		// asleep_think(philo);
 	}
 
 }

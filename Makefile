@@ -6,7 +6,7 @@
 #    By: vchan <vchan@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/02 16:49:26 by lseiller          #+#    #+#              #
-#    Updated: 2022/07/23 17:01:21 by vchan            ###   ########.fr        #
+#    Updated: 2022/07/25 12:35:36 by vchan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,8 @@ _BLUE		=	\e[34m
 # FLAGS #
 MAKEFLAGS	+=	--silent
 #CC_FLAGS	=	-Wall -Wextra -Werror -pthread
-CC_FLAGS	=	-g -pthread
-# CC_FLAGS	=	-g -pthread -fsanitize=thread
+# CC_FLAGS	=	-g3 -pthread
+CC_FLAGS	=	-g3 -pthread -fsanitize=thread
 
 # FILES #
 DIR 		=	./

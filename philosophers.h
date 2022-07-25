@@ -6,7 +6,7 @@
 /*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/24 00:56:53 by vchan            ###   ########.fr       */
+/*   Updated: 2022/07/25 12:40:14 by vchan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_param_philo
 	unsigned long	start_t;
 	unsigned long	end_t;
 	bool			*fork_state;
-	pthread_mutex_t	*mutex_print;
+	pthread_mutex_t	mutex_print;
 }	t_param_philo;
 
 typedef struct s_philo
@@ -85,5 +85,6 @@ void	change_state(t_philo *philos, int i);
 void	lock_forks(t_philo *philos, int i);
 void	unlock_forks(t_philo *philos, int i);
 void	destroy_mutex(t_param_philo *data, int compt, int s);
+unsigned long	diff_time2(t_param_philo *data);
 
 #endif

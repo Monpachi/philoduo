@@ -19,3 +19,15 @@ unsigned long	diff_time(t_param_philo *data)
 	data->end_t += (unsigned long) end_time.tv_usec / 1000;
 	return (data->end_t);
 }
+
+unsigned long	diff_time2(t_param_philo *data)
+{
+	struct	timeval end_time;
+	int				time;
+
+	time = data->start_t;
+	gettimeofday(&end_time, NULL);
+	data->end_t = (unsigned long) end_time.tv_sec * 1000;
+	data->end_t += (unsigned long) end_time.tv_usec / 1000;
+	return (data->end_t - data->start_t);
+}
