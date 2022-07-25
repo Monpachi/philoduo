@@ -12,7 +12,6 @@ int	init_data(t_param_philo *data)
 		return (1);
 	if (pthread_mutex_init(&data->mutex_print, NULL))
 		return (free(data->fork_state), 1);
-
 	return (0);
 }
 
