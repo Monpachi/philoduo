@@ -10,6 +10,12 @@ int	is_alive(t_philo *philo)
 		print_action2(philo, DEAD_MSG);
 		return (1);
 	}
+	else if (diff_time2(philo->last_meal, now()) >= philo->data->tt_die * 1000)
+	{
+		usleep((philo->data->tt_die * 1000));
+		print_action2(philo, DEAD_MSG);
+		return (1);
+	}
 	return (0);
 }
 

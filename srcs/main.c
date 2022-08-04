@@ -1,5 +1,7 @@
 #include "philosophers.h"
 
+
+// rajouter un seul philo
 int main(int argc, char **argv)
 {
 	t_param_philo	data;

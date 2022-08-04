@@ -3,7 +3,7 @@
 int	init_data(t_param_philo *data)
 {
 	data->nb_philo = 4;
-	data->tt_die = 500;
+	data->tt_die = 200;
 	data->tt_eat = 200;
 	data->tt_sleep = 200;
 	data->rounds = -1;
