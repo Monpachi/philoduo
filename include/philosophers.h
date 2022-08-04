@@ -6,7 +6,7 @@
 /*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/07/28 15:05:34 by vchan            ###   ########.fr       */
+/*   Updated: 2022/08/04 17:31:34 by vchan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ typedef struct s_param_philo
 	unsigned long	tt_die;
 	unsigned long	tt_eat;
 	unsigned long	tt_sleep;
-	unsigned long	last_meal;
 	int				rounds;
 	pthread_mutex_t	lock;
 	int				alive;
+	pthread_mutex_t alive_m;
 	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	*mutex_state;
-	unsigned long	start_t;
-	unsigned long	end_t;
+	struct timeval	start_t;
+	struct timeval	end_t;
 	bool			*fork_state;
 	pthread_mutex_t	mutex_print;
 }	t_param_philo;
@@ -57,10 +57,10 @@ typedef struct s_philo
 	int				id;
 	int				state;
 	int				count_r;
-	unsigned long	last_meal;
+	struct timeval 	last_meal;
 	pthread_mutex_t	*last_meal_m;
-	unsigned long	start_t;
-	unsigned long	end_t;
+	struct timeval	start_t;
+	struct timeval	end_t;
 	pthread_t		thread_id;
 	t_param_philo	*data;
 }	t_philo;
@@ -70,8 +70,9 @@ void	*ft_calloc(size_t nmemb, size_t size);
 /**************************************************************************** */
 /*								TIME										  */
 /**************************************************************************** */
-unsigned long	get_time(t_param_philo *data);
-unsigned long	diff_time(t_param_philo *data);
+// unsigned long	get_time();
+struct timeval	now();
+unsigned long	diff_time2(struct timeval start, struct timeval end);
 
 /**************************************************************************** */
 /*								INIT										  */
@@ -86,7 +87,7 @@ void	change_state(t_philo *philos, int i);
 void	lock_forks(t_philo *philos, int i);
 void	unlock_forks(t_philo *philos, int i);
 void	destroy_mutex(t_param_philo *data, int compt, int s);
-unsigned long	diff_time2(t_param_philo *data);
+// unsigned long	diff_time2(t_param_philo *data);
 
 int	philo_can_live(t_param_philo *data, t_philo *philos);
 void	print_action(t_philo *philo, char *s);
@@ -94,5 +95,7 @@ void	*ft_calloc(size_t nmemb, size_t size);
 int	philo_is_hungry(t_philo *philo);
 bool	asleep_think(t_philo *philos);
 void	*routine(void *philos_to_cast);
+void	ft_usleep(int duration, t_param_philo *data);
+void	print_action2(t_philo *philo, char *s);
 
 #endif

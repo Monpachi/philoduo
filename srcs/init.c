@@ -2,12 +2,11 @@
 
 int	init_data(t_param_philo *data)
 {
-	data->nb_philo = 6;
-	data->tt_die = 800;
-	// data->tt_die = 410;
+	data->nb_philo = 4;
+	data->tt_die = 500;
 	data->tt_eat = 200;
 	data->tt_sleep = 200;
-	data->rounds = 0;
+	data->rounds = -1;
 	data->alive = 0;
 	data->fork_state = ft_calloc(data->nb_philo, sizeof(bool));
 	if (!data->fork_state)
@@ -15,6 +14,8 @@ int	init_data(t_param_philo *data)
 	if (pthread_mutex_init(&data->mutex_print, NULL))
 		return (free(data->fork_state), 1);
 	if (pthread_mutex_init(&data->lock, NULL))
+		return (free(data->fork_state), 1);
+	if (pthread_mutex_init(&data->alive_m, NULL))
 		return (free(data->fork_state), 1);
 	return (0);
 }
@@ -79,7 +80,7 @@ int	philo_can_live(t_param_philo *data, t_philo *philos)
 	int	i;
 
 	i = 0;
-	data->start_t = get_time(data);
+	data->start_t = now();
 	while (i < data->nb_philo)
 	{
 		pthread_create(&(philos[i].thread_id), NULL, &routine, philos + i);

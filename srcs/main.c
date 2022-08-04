@@ -13,10 +13,6 @@ int main(int argc, char **argv)
 	if (!philos)
 		return (destroy_mutex(&data, data.nb_philo - 1, 1), 0);
 	init_tab_philo(philos, &data);
-	// if (data.nb_philo == 1)
-	// 	routine_solo(philos);
 	philo_can_live(&data, philos);
-	// philo_can_live(&data, philos);
-
 	return (0);
 }
