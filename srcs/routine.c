@@ -4,7 +4,13 @@ int	is_alive(t_philo *philo)
 {
 	unsigned long	time;
 
-	if (diff_time2(philo->last_meal, now()) >= philo->data->tt_die * 1000 - philo->data->tt_eat * 1000)
+	if (philo->data->tt_die == philo->data->tt_eat)
+	{
+		usleep((philo->data->tt_die * 1000));
+		print_action2(philo, DEAD_MSG);
+		return (1);
+	}
+	else if (diff_time2(philo->last_meal, now()) >= philo->data->tt_die * 1000 - philo->data->tt_eat * 1000)
 	{
 		usleep((philo->data->tt_die * 1000) - philo->data->tt_eat * 1000);
 		print_action2(philo, DEAD_MSG);
@@ -57,15 +63,15 @@ int	philo_is_hungry(t_philo *philo)
 	}
 	else
 	{
-		pthread_mutex_lock(fork1);
-		print_action(philo, FORK_MSG);
 		pthread_mutex_lock(fork2);
+		print_action(philo, FORK_MSG);
+		pthread_mutex_lock(fork1);
 		print_action(philo, FORK_MSG);
 		print_action(philo, EAT_MSG);
 		philo->last_meal = now();
 		usleep(1000 * philo->data->tt_eat);
-		pthread_mutex_unlock(fork2);
 		pthread_mutex_unlock(fork1);
+		pthread_mutex_unlock(fork2);
 	}
 	return (0);
 }
@@ -90,10 +96,6 @@ void	*routine(void *philos_to_cast)
 	philo->last_meal = now();
 	while (!is_running(philo))
 	{
-		// pthread_mutex_lock(&philo->data->lock);
-		// if (philo->data->alive == 1)
-		// 	return ((void)pthread_mutex_unlock(&philo->data->lock), NULL);
-		// pthread_mutex_unlock(&philo->data->lock);
 		philo_is_hungry(philo);
 		asleep_think(philo);
 	}
