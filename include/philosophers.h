@@ -6,7 +6,7 @@
 /*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/08/04 17:47:18 by vchan            ###   ########.fr       */
+/*   Updated: 2022/08/06 17:39:17 by vchan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,5 @@ bool	asleep_think(t_philo *philos);
 void	*routine(void *philos_to_cast);
 void	ft_usleep(int duration, t_param_philo *data);
 void	print_action2(t_philo *philo, char *s);
-
+void	*solo(void *philo);
 #endif

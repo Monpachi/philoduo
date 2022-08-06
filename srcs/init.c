@@ -2,8 +2,8 @@
 
 int	init_data(t_param_philo *data)
 {
-	data->nb_philo = 20;
-	data->tt_die = 800;
+	data->nb_philo = 10;
+	data->tt_die = 500;
 	data->tt_eat = 200;
 	data->tt_sleep = 200;
 	data->rounds = -1;
@@ -22,7 +22,7 @@ int	init_data(t_param_philo *data)
 
 void	destroy_mutex(t_param_philo *data, int compt, int s)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i <= compt)
@@ -81,7 +81,9 @@ int	philo_can_live(t_param_philo *data, t_philo *philos)
 
 	i = 0;
 	data->start_t = now();
-	while (i < data->nb_philo)
+	if (data->nb_philo == 1)
+			pthread_create(&(philos[i].thread_id), NULL, &solo, philos + i);
+	while (i < data->nb_philo && data->nb_philo > 1)
 	{
 		pthread_create(&(philos[i].thread_id), NULL, &routine, philos + i);
 		i++;

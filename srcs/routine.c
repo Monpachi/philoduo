@@ -101,3 +101,14 @@ void	*routine(void *philos_to_cast)
 	}
 	return (NULL);
 }
+
+void	*solo(void *philo)
+{
+	t_philo	*tmp;
+
+	tmp = philo;
+	print_action(tmp, FORK_MSG);
+	usleep(tmp->data->tt_die * 1000);
+	print_action(tmp, DEAD_MSG);
+	return (NULL);
+}
