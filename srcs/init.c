@@ -2,10 +2,10 @@
 
 int	init_data(t_param_philo *data)
 {
-	data->nb_philo = 10;
-	data->tt_die = 500;
-	data->tt_eat = 200;
-	data->tt_sleep = 200;
+	data->nb_philo = 40;
+	data->tt_die = 800;
+	data->tt_eat = 390;
+	data->tt_sleep = 400;
 	data->rounds = -1;
 	data->alive = 0;
 	data->fork_state = ft_calloc(data->nb_philo, sizeof(bool));
@@ -82,7 +82,7 @@ int	philo_can_live(t_param_philo *data, t_philo *philos)
 	i = 0;
 	data->start_t = now();
 	if (data->nb_philo == 1)
-			pthread_create(&(philos[i].thread_id), NULL, &solo, philos + i);
+		pthread_create(&(philos[i].thread_id), NULL, &solo, philos + i);
 	while (i < data->nb_philo && data->nb_philo > 1)
 	{
 		pthread_create(&(philos[i].thread_id), NULL, &routine, philos + i);

@@ -6,8 +6,8 @@ NAME		=	philo
 NAME_BONUS	=	bonus
 RM			=	rm -f
 CC			=	clang
-# CFLAGS		=	-g3 -pthread -fsanitize=thread
-CFLAGS		=	-g3 -pthread
+CFLAGS		=	-g3 -pthread -fsanitize=thread
+# CFLAGS		=	-g3 -pthread
 
 # COLORS/FORMAT #
 _END		=	\e[0m

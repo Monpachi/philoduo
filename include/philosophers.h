@@ -6,7 +6,7 @@
 /*   By: vchan <vchan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 17:58:18 by lseiller          #+#    #+#             */
-/*   Updated: 2022/08/06 17:39:17 by vchan            ###   ########.fr       */
+/*   Updated: 2022/08/06 18:19:04 by vchan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_param_philo
 	int				rounds;
 	pthread_mutex_t	lock;
 	int				alive;
-	pthread_mutex_t alive_m;
+	pthread_mutex_t	alive_m;
 	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	*mutex_state;
 	struct timeval	start_t;
@@ -57,7 +57,7 @@ typedef struct s_philo
 	int				id;
 	int				state;
 	int				count_r;
-	struct timeval 	last_meal;
+	struct timeval	last_meal;
 	pthread_mutex_t	*last_meal_m;
 	struct timeval	start_t;
 	struct timeval	end_t;
@@ -70,8 +70,8 @@ void	*ft_calloc(size_t nmemb, size_t size);
 /**************************************************************************** */
 /*								TIME										  */
 /**************************************************************************** */
-// unsigned long	get_time();
-struct timeval	now();
+
+struct timeval	now(void);
 unsigned long	diff_time2(struct timeval start, struct timeval end);
 
 /**************************************************************************** */
@@ -87,12 +87,11 @@ void	change_state(t_philo *philos, int i);
 void	lock_forks(t_philo *philos, int i);
 void	unlock_forks(t_philo *philos, int i);
 void	destroy_mutex(t_param_philo *data, int compt, int s);
-// unsigned long	diff_time2(t_param_philo *data);
 
-int	philo_can_live(t_param_philo *data, t_philo *philos);
+int		philo_can_live(t_param_philo *data, t_philo *philos);
 void	print_action(t_philo *philo, char *s);
 void	*ft_calloc(size_t nmemb, size_t size);
-int	philo_is_hungry(t_philo *philo);
+int		philo_is_hungry(t_philo *philo);
 bool	asleep_think(t_philo *philos);
 void	*routine(void *philos_to_cast);
 void	ft_usleep(int duration, t_param_philo *data);

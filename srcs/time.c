@@ -1,16 +1,5 @@
 #include "philosophers.h"
 
-// unsigned long	get_time()
-// {
-// 	struct	timeval time;
-// 	unsigned long	start_t;
-
-// 	gettimeofday(&time, NULL);
-// 	start_t = (unsigned long) time.tv_sec * 1000;
-// 	start_t += (unsigned long) time.tv_usec / 1000;
-// 	return (start_t);
-// }
-
 struct timeval	now(void)
 {
 	struct	timeval time;
@@ -19,16 +8,6 @@ struct timeval	now(void)
 	return (time);
 }
 
-// unsigned long	diff_time2(t_param_philo *data)
-// {
-// 	struct	timeval end_time;
-// 	int				time;
-
-// 	gettimeofday(&end_time, NULL);
-// 	data->end_t = (unsigned long) end_time.tv_sec * 1000;
-// 	data->end_t += (unsigned long) end_time.tv_usec / 1000;
-// 	return (data->end_t - data->start_t);
-// }
 
 unsigned long	diff_time2(struct timeval start, struct timeval end)
 {
